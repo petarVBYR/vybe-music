@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VYBE Music</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101010;color:white;font-family:Arial,sans-serif}
+header{padding:22px 20px;font-size:28px;font-weight:900;letter-spacing:2px;color:#a78bfa}
+header span{color:white}
+main{padding:16px;padding-bottom:160px}
+h2{font-size:21px}
+button{border:0;border-radius:12px;padding:12px;background:#272727;color:white;font-size:15px;cursor:pointer}
+button:active{opacity:.7}
+.primary{background:#a78bfa;color:#111;font-weight:bold}
+input{background:#222;color:white;border:1px solid #333;border-radius:12px;padding:13px;width:100%;margin:8px 0}
+.row{display:flex;align-items:center;gap:10px}
+.row>*{flex-shrink:0}
+#songlist{margin-top:16px}
+.song{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px}
+.song.active{background:#29232f}
+.cover{width:48px;height:48px;border-radius:8px;background:linear-gradient(135deg,#a78bfa,#222);display:flex;align-items:center;justify-content:center;font-size:20px}
+.songinfo{flex:1;min-width:0}
+.songinfo b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.songinfo small{color:#aaa}
+.fav{font-size:22px;background:none;padding:8px;color:#aaa}
+#player{position:fixed;bottom:0;left:0;right:0;background:#1b1b1b;border-top:1px solid #333;padding:14px 18px 22px;z-index:5}
+#nowtitle{font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#nowartist{font-size:12px;color:#aaa;margin-top:4px}
+#seek{width:100%;margin:8px 0;accent-color:#a78bfa}
+.controls{display:flex;justify-content:center;align-items:center;gap:20px}
+.controls button{font-size:19px;background:none}
+.controls .play{background:#a78bfa;color:#111;border-radius:50%;width:50px;height:50px;font-size:22px}
+#status{font-size:12px;color:#aaa;margin:10px 0}
+.tabs{display:flex;gap:8px;overflow:auto}
+.tabs button{white-space:nowrap}
+select{background:#222;color:white;padding:10px;border-radius:10px;border:1px solid #444}
+#empty{text-align:center;color:#999;padding:30px 10px}
+</style>
+</head>
+<body>
+<header>VYBE<span>.</span></header>
+<main>
+<h2>Your music</h2>
+<div class="row">
+<button class="primary" onclick="document.getElementById('files').click()">＋ Add music</button>
+<button onclick="showFavorites()">♥ Favorites</button>
+<button onclick="showAll()">All songs</button>
+</div>
+<input id="files" type="file" accept="audio/*" multiple hidden onchange="addSongs(this.files)">
+<input id="search" placeholder="Search songs..." oninput="searchSongs(this.value)">
+<div id="status">Add audio files from your device to start.</div>
+<div id="songlist"></div>
+</main>
+
+<div id="player">
+<div class="row">
+<div class="cover">♫</div>
+<div style="flex:1;min-width:0">
+<div id="nowtitle">Nothing playing</div>
+<div id="nowartist">Add music to VYBE</div>
+</div>
+<button class="fav" id="playerfav" onclick="toggleCurrentFav()">♡</button>
+</div>
+<input type="range" id="seek" value="0" min="0" max="100" oninput="seekMusic(this.value)">
+<div class="controls">
+<button onclick="shuffleToggle()" id="shuffle">🔀</button>
+<button onclick="prevSong()">⏮</button>
+<button class="play" onclick="playPause()" id="playbtn">▶</button>
+<button onclick="nextSong()">⏭</button>
+<button onclick="repeatToggle()" id="repeat">🔁</button>
+</div>
+</div>
+
+<audio id="audio"></audio>
+
+<script>
+let songs=[];
+let current=-1;
+let favorites=new Set();
+let shuffled=false;
+let repeating=false;
+let view="all";
+
+const audio=document.getElementById("audio");
+
+function addSongs(files){
+  for(const file of files){
+    if(!file.type.startsWith("audio/"))continue;
+    songs.push({name:file.name.replace(/\.[^/.]+$/,""),file,url:URL.createObjectURL(file)});
+  }
+  document.getElementById("status").textContent=songs.length+" songs added this session";
+  renderSongs();
+}
+
+function renderSongs(list=songs){
+  const el=document.getElementById("songlist");
+  el.innerHTML="";
+  if(!list.length){
+    el.innerHTML='<div id="empty">No songs found.</div>';
+    return;
+  }
+  list.forEach(song=>{
+    const i=songs.indexOf(song);
+    const div=document.createElement("div");
+    div.className="song"+(i===current?" active":"");
+    div.innerHTML=`<div class="cover">♫</div>
+      <div class="songinfo"><b></b><small>Local audio</small></div>
+      <button class="fav">${favorites.has(i)?"♥":"♡"}</button>`;
+    div.querySelector(".songinfo b").textContent=song.name;
+    div.querySelector(".songinfo").onclick=()=>playSong(i);
+    div.querySelector(".cover").onclick=()=>playSong(i);
+    div.querySelector(".fav").onclick=()=>toggleFav(i);
+    el.appendChild(div);
+  });
+}
+
+function playSong(i){
+  if(i<0||i>=songs.length)return;
+  current=i;
+  audio.src=songs[i].url;
+  audio.play().catch(()=>{});
+  updatePlayer();
+  renderSongs();
+}
+function playPause(){
+  if(current===-1){if(songs.length)playSong(0);return;}
+  if(audio.paused){audio.play();document.getElementById("playbtn").textContent="⏸";}
+  else{audio.pause();document.getElementById("playbtn").textContent="▶";}
+}
+function nextSong(){
+  if(!songs.length)return;
+  let n=shuffled?Math.floor(Math.random()*songs.length):(current+1)%songs.length;
+  playSong(n);
+}
+function prevSong(){
+  if(!songs.length)return;
+  if(audio.currentTime>3){audio.currentTime=0;return;}
+  playSong((current-1+songs.length)%songs.length);
+}
+function updatePlayer(){
+  if(current<0)return;
+  document.getElementById("nowtitle").textContent=songs[current].name;
+  document.getElementById("nowartist").textContent="Local audio";
+  document.getElementById("playbtn").textContent=audio.paused?"▶":"⏸";
+  document.getElementById("playerfav").textContent=favorites.has(current)?"♥":"♡";
+}
+function toggleFav(i){
+  if(favorites.has(i))favorites.delete(i);else favorites.add(i);
+  renderSongs();
+  updatePlayer();
+}
+function toggleCurrentFav(){if(current>=0)toggleFav(current);}
+function showFavorites(){
+  view="favorites";
+  renderSongs(songs.filter((s,i)=>favorites.has(i)));
+}
+function showAll(){view="all";renderSongs();}
+function searchSongs(q){
+  let list=songs.filter(s=>s.name.toLowerCase().includes(q.toLowerCase()));
+  if(view==="favorites")list=list.filter(s=>favorites.has(songs.indexOf(s)));
+  renderSongs(list);
+}
+function shuffleToggle(){
+  shuffled=!shuffled;
+  document.getElementById("shuffle").style.color=shuffled?"#a78bfa":"white";
+}
+function repeatToggle(){
+  repeating=!repeating;
+  audio.loop=repeating;
+  document.getElementById("repeat").style.color=repeating?"#a78bfa":"white";
+}
+function seekMusic(v){
+  if(audio.duration)audio.currentTime=audio.duration*(v/100);
+}
+audio.ontimeupdate=()=>{
+  if(audio.duration){
+    document.getElementById("seek").value=(audio.currentTime/audio.duration)*100;
+  }
+};
+audio.onplay=()=>document.getElementById("playbtn").textContent="⏸";
+audio.onpause=()=>document.getElementById("playbtn").textContent="▶";
+audio.onended=()=>{if(!repeating)nextSong();};
+</script>
+</body>
+  </html>
+  
