@@ -1,10 +1,223 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="sr">
 <head>
-  <title>VYBE</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0e">
+<title>VYBE</title>
+<style>
+:root{--bg:#0a0a0e;--card:#15151d;--card2:#20202a;--text:#f6f4fb;--muted:#9895a6;--accent:#9b65ff;--line:#2a2935}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;color:var(--text)}
+.app{max-width:820px;margin:auto;padding:18px 15px 190px}
+header{display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:28px;font-weight:900;letter-spacing:3px}
+.logo span{color:var(--accent)}
+.btn{border:1px solid var(--line);background:var(--card2);border-radius:13px;padding:11px 14px}
+.primary{background:var(--accent);border:0;border-radius:13px;padding:13px 17px;font-weight:750;color:white}
+.hero{padding:23px;margin-top:18px;border-radius:23px;background:linear-gradient(135deg,#412768,#17151f 78%);border:1px solid #493465}
+.hero h1{font-size:30px;margin:0}
+.hero p{color:#c6b9dc;font-size:14px;margin:6px 0 17px}
+.search{width:100%;margin-top:18px;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);outline:none}
+.tabs{display:flex;gap:8px;overflow:auto;margin-top:15px}
+.tab{white-space:nowrap;border:1px solid var(--line);background:var(--card);color:var(--muted);padding:10px 14px;border-radius:12px}
+.tab.active{background:#34234b;border-color:var(--accent);color:white}
+.section{margin-top:24px}
+.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.head h2{font-size:19px;margin:0}
+.muted{color:var(--muted);font-size:13px}
+.track{display:flex;align-items:center;gap:11px;padding:10px 5px;border-bottom:1px solid var(--line)}
+.cover{width:48px;height:48px;border-radius:12px;background:linear-gradient(145deg,#9059e9,#252135);display:grid;place-items:center;font-size:21px;flex-shrink:0}
+.info{flex:1;min-width:0}
+.name{font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.artist{color:var(--muted);font-size:13px;margin-top:3px}
+.track button{border:0;background:none;padding:8px;font-size:19px}
+.track.playing .name{color:var(--accent)}
+.empty{text-align:center;color:var(--muted);padding:25px 10px}
+.pill{border:1px solid var(--line);background:var(--card2);border-radius:30px;padding:6px 10px;color:var(--muted);font-size:12px}
+.plrow{display:flex;align-items:center;gap:12px;padding:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;margin:8px 0}
+.plrow .info{flex:1}
+textarea{width:100%;min-height:110px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;color:var(--text)}
+.setting{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
+select{background:var(--card2);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:8px}
+.eqrow{display:flex;align-items:center;gap:12px;padding:8px 0}
+.eqrow label{width:55px;color:var(--muted);font-size:13px}
+.eqrow input{flex:1;accent-color:var(--accent)}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#111119f5;backdrop-filter:blur(20px);border-top:1px solid var(--line);padding:10px 14px calc(12px + env(safe-area-inset-bottom));z-index:5}
+.now{max-width:820px;margin:auto}
+.nowtop{display:flex;align-items:center;gap:10px}
+.nowtop .cover{width:43px;height:43px}
+.nowinfo{flex:1;min-width:0}
+.nowname{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nowartist{font-size:12px;color:var(--muted)}
+.seekrow{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:11px}
+#seek{width:100%;accent-color:var(--accent)}
+.controls{display:flex;align-items:center;justify-content:center;gap:22px;margin:5px 0}
+.controls button{background:none;border:0;font-size:22px;padding:4px}
+.bigplay{width:47px;height:47px;border-radius:50%;background:var(--accent)!important;color:white}
+.drawer{display:none;position:fixed;inset:0;background:#0009;z-index:9;align-items:flex-end}
+.drawer.show{display:flex}
+.drawerbox{background:var(--card);width:100%;max-height:85vh;overflow:auto;padding:20px;border-radius:22px 22px 0 0}
+.drawerbox button{margin:5px}
+#toast{display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--card2);padding:12px 16px;border-radius:12px;border:1px solid var(--line);z-index:20}
+.light{--bg:#f5f2fa;--card:#fff;--card2:#eae5f2;--text:#201b2a;--muted:#777181;--line:#d9d2e3}
+</style>
 </head>
-<body style="background:#101010;color:white;font-family:Arial;text-align:center;padding-top:100px">
-  <h1 style="color:#a78bfa">VYBE MUSIC</h1>
-  <p>My music player is online!</p>
-</body>
-</html>
+<body>
+<div class="app">
+<header><div class="logo">VY<span>BE</span></div><button class="btn" onclick="theme()">☼ / ☾</button></header>
+<div class="hero">
+<h1>Your music.<br>Your vibe.</h1>
+<p>Your music space. No ads. Just your library.</p>
+<button class="primary" onclick="document.getElementById('picker').click()">＋ Add music</button>
+<input id="picker" type="file" accept="audio/*" multiple hidden>
+</div>
+<input class="search" id="search" placeholder="⌕ Search songs or artists..." oninput="render()">
+<div class="tabs">
+<button class="tab active" onclick="setTab('all',this)">All songs</button>
+<button class="tab" onclick="setTab('fav',this)">♥ Favorites</button>
+<button class="tab" onclick="setTab('recent',this)">Recent</button>
+<button class="tab" onclick="setTab('pls',this)">Playlists</button>
+</div>
+<section class="section" id="plsSection" hidden>
+<div class="head"><h2>Playlists</h2><button class="btn" onclick="newPlaylist()">＋ Create</button></div>
+<div id="pls"></div>
+</section>
+<section class="section" id="songsSection">
+<div class="head"><h2 id="heading">Library</h2><span class="pill" id="count">0</span></div>
+<div id="tracks"></div>
+</section>
+<section class="section">
+<div class="head"><h2>Lyrics & Notes</h2></div>
+<textarea id="lyrics" placeholder="Lyrics or notes for current song..." oninput="saveNotes()"></textarea>
+</section>
+<section class="section">
+<div class="head"><h2>Audio settings</h2></div>
+<div class="setting"><span>Playback speed</span><select id="speed" onchange="speed(this.value)"><option>0.75</option><option>0.9</option><option selected>1</option><option>1.1</option><option>1.25</option><option>1.5</option><option>1.75</option><option>2</option></select></div>
+<div class="setting"><span>Sleep timer</span><select onchange="sleep(this.value)"><option value="0">Off</option><option value="5">5 min</option><option value="15">15 min</option><option value="30">30 min</option><option value="45">45 min</option><option value="60">60 min</option></select></div>
+<div class="setting"><span>Shuffle</span><button class="btn" id="shSetting" onclick="shuffleToggle()">Off</button></div>
+<div class="setting"><span>Repeat</span><button class="btn" id="rpSetting" onclick="repeatToggle()">Off</button></div>
+<div class="head" style="margin-top:20px"><h2>Equalizer</h2><button class="btn" onclick="resetEQ()">Reset</button></div>
+<div class="eqrow"><label>Bass</label><input id="bass" type="range" min="-12" max="12" value="0" oninput="eq()"><span id="bassV">0 dB</span></div>
+<div class="eqrow"><label>Mid</label><input id="mid" type="range" min="-12" max="12" value="0" oninput="eq()"><span id="midV">0 dB</span></div>
+<div class="eqrow"><label>Treble</label><input id="treble" type="range" min="-12" max="12" value="0" oninput="eq()"><span id="trebleV">0 dB</span></div>
+<div class="setting"><span>Export backup (metadata)</span><button class="btn" onclick="backup()">Export</button></div>
+<div class="setting"><span>Clear library</span><button class="btn" onclick="clearLibrary()">Clear</button></div>
+</section>
+</div>
+
+<div class="bottom">
+<div class="now">
+<div class="nowtop"><div class="cover">♫</div><div class="nowinfo"><div class="nowname" id="nowName">Nothing playing</div><div class="nowartist" id="nowArtist">Add songs to start</div></div><button onclick="favCurrent()" id="nowFav" style="background:none;border:0;font-size:22px">♡</button></div>
+<div class="seekrow"><span id="elapsed">0:00</span><input id="seek" type="range" min="0" max="1000" value="0" oninput="seek(this.value)"><span id="duration">0:00</span></div>
+<div class="controls"><button onclick="shuffleToggle()" id="shBtn">🔀</button><button onclick="previous()">⏮</button><button class="bigplay" onclick="playToggle()" id="playBtn">▶</button><button onclick="next()">⏭</button><button onclick="repeatToggle()" id="rpBtn">↻</button></div>
+</div>
+</div>
+<div class="drawer" id="drawer" onclick="if(event.target===this)closeDrawer()"><div class="drawerbox" id="drawerContent"></div></div>
+<div id="toast"></div>
+<audio id="audio"></audio>
+
+<script>
+const $=id=>document.getElementById(id);
+const audio=$('audio');
+let db,songs=[],favorites=new Set(),recent=[],playlists=[],notes={};
+let current=-1,tab='all',shuffle=false,repeat=0,urls={};
+let toastTimer,sleepTimer;
+let ctx,source,bassF,midF,trebleF;
+
+function openDB(){
+ return new Promise((resolve,reject)=>{
+  const r=indexedDB.open('VYBE_DB',1);
+  r.onupgradeneeded=()=>r.result.createObjectStore('songs',{keyPath:'id'});
+  r.onsuccess=()=>{db=r.result;resolve(db)};
+  r.onerror=()=>reject(r.error);
+ });
+}
+function tx(mode='readonly'){return db.transaction('songs',mode).objectStore('songs')}
+function allDB(){return new Promise((res,rej)=>{let r=tx().getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+function putDB(song){return new Promise((res,rej)=>{let r=tx('readwrite').put(song);r.onsuccess=()=>res();r.onerror=()=>rej(r.error)})}
+function delDB(id){return new Promise((res,rej)=>{let r=tx('readwrite').delete(id);r.onsuccess=()=>res();r.onerror=()=>rej(r.error)})}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function fmt(n){if(!isFinite(n))return'0:00';return Math.floor(n/60)+':'+String(Math.floor(n%60)).padStart(2,'0')}
+function toast(m){$('toast').textContent=m;$('toast').style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').style.display='none',2200)}
+function getURL(s){if(!urls[s.id])urls[s.id]=URL.createObjectURL(s.blob);return urls[s.id]}
+async function init(){
+ try{await openDB();songs=await allDB();render();toast('VYBE ready')}
+ catch(e){toast('Storage could not be opened')}
+}
+$('picker').onchange=async e=>{
+ for(const f of e.target.files){
+  if(!f.type.startsWith('audio/'))continue;
+  const id=f.name+'_'+f.size+'_'+f.lastModified;
+  if(songs.some(s=>s.id===id)){toast('Duplicate skipped');continue}
+  const s={id,name:f.name.replace(/\.[^.]+$/,''),artist:'Unknown artist',blob:f,type:f.type};
+  try{await putDB(s);songs.push(s)}catch(err){toast('Storage full or unavailable')}
+ }
+ e.target.value='';render();
+};
+function setTab(t,b){tab=t;document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('plsSection').hidden=t!=='pls';$('songsSection').style.display=t==='pls'?'none':'block';render()}
+function render(){
+ if(tab==='pls'){renderPlaylists();return}
+ let q=$('search').value.toLowerCase();
+ let list=songs.map((s,i)=>({...s,index:i}));
+ if(tab==='fav')list=list.filter(s=>favorites.has(s.id));
+ if(tab==='recent')list=list.filter(s=>recent.includes(s.id)).sort((a,b)=>recent.indexOf(a.id)-recent.indexOf(b.id));
+ list=list.filter(s=>(s.name+' '+s.artist).toLowerCase().includes(q));
+ $('heading').textContent={all:'Your library',fav:'Favorites',recent:'Recently played'}[tab];
+ $('count').textContent=list.length+' songs';
+ $('tracks').innerHTML=list.length?list.map(s=>`<div class="track ${s.index===current?'playing':''}"><div class="cover">♫</div><div class="info" onclick="playSong(${s.index})"><div class="name">${esc(s.name)}</div><div class="artist">${esc(s.artist)}</div></div><button onclick="favorite(${s.index})">${favorites.has(s.id)?'♥':'♡'}</button><button onclick="menuSong(${s.index})">⋮</button></div>`).join(''):`<div class="empty">${songs.length?'No matches':'Library empty — add music above'}</div>`;
+}
+function renderPlaylists(){
+ $('pls').innerHTML=playlists.length?playlists.map((p,i)=>`<div class="plrow"><div class="cover">♫</div><div class="info" onclick="openPlaylist(${i})"><div class="name">${esc(p.name)}</div><div class="artist">${p.ids.length} tracks</div></div><button class="btn" onclick="playlistMenu(${i})">⋮</button></div>`).join(''):'<div class="empty">No playlists yet</div>';
+}
+async function playSong(i){
+ if(!songs[i])return;current=i;
+ audio.src=getURL(songs[i]);audio.playbackRate=Number($('speed').value);
+ try{await audio.play()}catch(e){toast('Press play to start')}
+ recent=recent.filter(x=>x!==songs[i].id);recent.unshift(songs[i].id);recent=recent.slice(0,100);
+ $('nowName').textContent=songs[i].name;$('nowArtist').textContent=songs[i].artist;
+ $('nowFav').textContent=favorites.has(songs[i].id)?'♥':'♡';$('lyrics').value=notes[songs[i].id]||'';
+ render();
+}
+function playToggle(){if(current<0){if(songs.length)playSong(0);else toast('Add music first')}else if(audio.paused)audio.play().catch(()=>toast('Playback error'));else audio.pause()}
+audio.onplay=()=>{$('playBtn').textContent='Ⅱ'};
+audio.onpause=()=>{$('playBtn').textContent='▶'};
+audio.ontimeupdate=()=>{if(audio.duration){$('seek').value=audio.currentTime/audio.duration*1000;$('elapsed').textContent=fmt(audio.currentTime);$('duration').textContent=fmt(audio.duration)}};
+audio.onended=()=>{if(repeat===2){audio.currentTime=0;audio.play()}else next()};
+function next(){if(!songs.length)return;if(repeat===1&&current===songs.length-1){audio.currentTime=0;audio.play();return}if(shuffle){let i=current;while(songs.length>1&&i===current)i=Math.floor(Math.random()*songs.length);playSong(i)}else playSong((current+1)%songs.length)}
+function previous(){if(audio.currentTime>3){audio.currentTime=0;return}if(songs.length)playSong((current-1+songs.length)%songs.length)}
+function seek(v){if(audio.duration)audio.currentTime=v/1000*audio.duration}
+function favorite(i){let id=songs[i]?.id;if(!id)return;favorites.has(id)?favorites.delete(id):favorites.add(id);render();$('nowFav').textContent=current>=0&&favorites.has(songs[current].id)?'♥':'♡'}
+function favCurrent(){if(current>=0)favorite(current)}
+function shuffleToggle(){shuffle=!shuffle;$('shSetting').textContent=shuffle?'On':'Off';$('shBtn').style.color=shuffle?'var(--accent)':'var(--text)';toast('Shuffle '+(shuffle?'on':'off'))}
+function repeatToggle(){repeat=(repeat+1)%3;let n=['Off','All','One'][repeat];$('rpSetting').textContent=n;$('rpBtn').textContent=repeat===0?'↻':repeat===1?'↻¹':'↻²';toast('Repeat: '+n)}
+function speed(v){audio.playbackRate=Number(v)}
+function sleep(v){clearTimeout(sleepTimer);if(!v)return toast('Timer off');sleepTimer=setTimeout(()=>{audio.pause();toast('Sleep timer ended')},Number(v)*60000);toast('Sleep timer set')}
+function initEQ(){
+ if(ctx)return;
+ try{ctx=new (window.AudioContext||window.webkitAudioContext)();source=ctx.createMediaElementSource(audio);bassF=ctx.createBiquadFilter();bassF.type='lowshelf';bassF.frequency.value=180;midF=ctx.createBiquadFilter();midF.type='peaking';midF.frequency.value=1000;midF.Q.value=1;trebleF=ctx.createBiquadFilter();trebleF.type='highshelf';trebleF.frequency.value=4000;source.connect(bassF);bassF.connect(midF);midF.connect(trebleF);trebleF.connect(ctx.destination)}catch(e){toast('EQ not supported in this browser')}
+}
+function eq(){initEQ();if(!ctx)return;bassF.gain.value=Number($('bass').value);midF.gain.value=Number($('mid').value);trebleF.gain.value=Number($('treble').value);['bass','mid','treble'].forEach(x=>$(x+'V').textContent=$(x).value+' dB')}
+function resetEQ(){['bass','mid','treble'].forEach(x=>$(x).value=0);eq()}
+function saveNotes(){if(current>=0)notes[songs[current].id]=$('lyrics').value}
+function newPlaylist(){let n=prompt('Playlist name');if(!n)return;playlists.push({name:n,ids:[]});renderPlaylists();toast('Playlist created')}
+function openPlaylist(i){let p=playlists[i];showDrawer(`<h2>${esc(p.name)}</h2><p class="muted">${p.ids.length} songs</p><button class="primary" onclick="playPlaylist(${i})">▶ Play</button><button class="btn" onclick="addToPlaylist(${i})">＋ Add songs</button><button class="btn" onclick="renamePlaylist(${i})">Rename</button><button class="btn" onclick="deletePlaylist(${i})">Delete</button><div id="dSongs">${p.ids.map(id=>songs.find(s=>s.id===id)).filter(Boolean).map(s=>`<div class="track"><div class="cover">♫</div><div class="info"><div class="name">${esc(s.name)}</div><div class="artist">${esc(s.artist)}</div></div><button onclick="removeFromPlaylist(${i},'${esc(s.id)}')">✕</button></div>`).join('')}</div>`)}
+function playPlaylist(i){let p=playlists[i];let first=p.ids.map(id=>songs.findIndex(s=>s.id===id)).find(j=>j>=0);if(first!==undefined)playSong(first);closeDrawer()}
+function addToPlaylist(i){let p=playlists[i],avail=songs.filter(s=>!p.ids.includes(s.id));if(!avail.length){toast('No available songs');return}let input=prompt(avail.map((s,j)=>`${j+1}. ${s.name}`).join('\n')+'\nSong numbers separated by commas');if(input)input.split(',').forEach(x=>{let s=avail[parseInt(x)-1];if(s)p.ids.push(s.id)});renderPlaylists();openPlaylist(i)}
+function removeFromPlaylist(i,id){playlists[i].ids=playlists[i].ids.filter(x=>x!==id);openPlaylist(i)}
+function renamePlaylist(i){let n=prompt('Playlist name',playlists[i].name);if(n){playlists[i].name=n;renderPlaylists();openPlaylist(i)}}
+function deletePlaylist(i){if(confirm('Delete playlist?')){playlists.splice(i,1);closeDrawer();renderPlaylists()}}
+function playlistMenu(i){openPlaylist(i)}
+function menuSong(i){showDrawer(`<h2>${esc(songs[i].name)}</h2><p>${esc(songs[i].artist)}</p><button class="btn" onclick="favorite(${i});closeDrawer()">♥ Favorite</button><button class="btn" onclick="editTags(${i})">Edit tags</button><button class="btn" onclick="addSongToPlaylist(${i})">Add to playlist</button><button class="btn" onclick="removeSong(${i})">Remove</button>`)}
+async function editTags(i){let n=prompt('Song name',songs[i].name);if(n===null)return;let a=prompt('Artist',songs[i].artist);if(a===null)return;songs[i].name=n;songs[i].artist=a;await putDB(songs[i]);render();closeDrawer()}
+function addSongToPlaylist(i){if(!playlists.length){toast('Create playlist first');closeDrawer();return}let n=prompt(playlists.map((p,j)=>`${j+1}. ${p.name}`).join('\n')+'\nPlaylist number');let p=playlists[Number(n)-1];if(p&&!p.ids.includes(songs[i].id))p.ids.push(songs[i].id);renderPlaylists();closeDrawer()}
+async function removeSong(i){if(!confirm('Remove song from library?'))return;let s=songs[i];await delDB(s.id);if(urls[s.id]){URL.revokeObjectURL(urls[s.id]);delete urls[s.id]}favorites.delete(s.id);recent=recent.filter(x=>x!==s.id);songs.splice(i,1);if(current===i){audio.pause();audio.src='';current=-1;$('nowName').textContent='Nothing playing';$('nowArtist').textContent='Add songs to start'}else if(current>i)current--;render();closeDrawer()}
+function showDrawer(h){$('drawerContent').innerHTML=h;$('drawer').classList.add('show')}
+function closeDrawer(){$('drawer').classList.remove('show')}
+function theme(){document.body.classList.toggle('light');localStorage.setItem('vybeTheme',document.body.classList.contains('light')?'light':'dark')}
+function backup(){let data={version:1,songs:songs.map(s=>({id:s.id,name:s.name,artist:s.artist})),favorites:[...favorites],recent,playlists,notes};let b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='VYBE-backup.json';a.click();toast('Metadata backup downloaded')}
+async function clearLibrary(){if(!confirm('Remove all songs from this library?'))return;await new Promise(res=>tx('readwrite').clear().onsuccess=res);songs=[];favorites.clear();recent=[];playlists=[];notes={};current=-1;audio.pause();audio.src='';$('nowName').textContent='Nothing playing';render();toast('Library cleared')}
+if(localStorage.get
